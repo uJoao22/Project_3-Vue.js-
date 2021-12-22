@@ -54,7 +54,9 @@ describe('Um lance com valor minimo', () => {
     //Delimitando um valor minimo para o lance
     test('Todos os lances devem possuir um valor maior do que o minimo informado', () => {
         const wrapper = mount(Lance, { //Enviando como parametro um objeto JS com valores de propriedades
-            propsData: 300 //Enviando propriedades para nosso componente Lance
+            propsData: { //Enviando propriedades para nosso componente Lance
+                lanceMinimo: 300
+            }
         })
 
         const input = wrapper.find('input')
@@ -70,7 +72,9 @@ describe('Um lance com valor minimo', () => {
     //Garantindo que o valor emitido seja o valor inserido
     test('emite o valor esperado de um lance valido', () => {
         const wrapper = mount(Lance, {
-            propsData: 300
+            propsData: {
+                lanceMinimo: 300
+            }
         })
 
         const input = wrapper.find('input')
@@ -88,7 +92,9 @@ describe('Um lance com valor minimo', () => {
     //Criando testes assincronos
     test('não são aceitos lances com valores menores do que o minimo informado', async () => {
         const wrapper = mount(Lance, {
-            propsData: 300
+            propsData: {
+                lanceMinimo: 300
+            }
         })
 
         const input = wrapper.find('input')
@@ -99,8 +105,10 @@ describe('Um lance com valor minimo', () => {
         //Aguardando pelo nextTick, ou seja, aguardando que o DOM seja atualizado, para prosseguir
         await wrapper.vm.$nextTick()
 
-        const msgErro = wrapper.find('p.alert') //Pegando o elemento p que possui a class alert de dentro do componente
+        const msgErro = wrapper.find('p.alert').element.textContent //Pegando o elemento p que possui a class alert de dentro do componente
 
-        expect(msgErro).toBeTruthy() //Esperamos que a mensagem de erro seja montado
+        const msgEsperada = 'O valor mínimo para o lance é de R$ 300'
+
+        expect(msgErro).toContain(msgEsperada) //Esperamos que a mensagem de erro contenha a mensagem esperada
     })
 })
