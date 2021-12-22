@@ -27,3 +27,23 @@ test('Emite um lance quando o valor é maior do que zero', () => {
 
     expect(lancesEmitidos).toHaveLength(1) //Esperando que lancesEmitidos retornem um tamanho 1, que exista elementos dentro dele
 })
+
+//Garantindo que o valor emito do lance, seja o mesmo inserindo em nosso componente
+test('Emite o valor esperado de um lance válido', () => {
+    const wrapper = mount(Lance)
+
+    const input = wrapper.find('input')
+    input.setValue(100)
+
+    wrapper.trigger('submit')
+
+    const lancesEmitidos = wrapper.emitted('novo-lance')
+
+    // Resultado emitido pelo lancesEmitidos
+    // [
+    //     [100]
+    // ]
+
+    const lance = parseInt(lancesEmitidos[0][0]) //Pegando o resultado de lancesEmitidos para conferir se é o mesmo inserido no componente
+    expect(lance).toBe(100) //Esperando que o valor de lance seja 100, o mesmo que foi inserido no input
+})
