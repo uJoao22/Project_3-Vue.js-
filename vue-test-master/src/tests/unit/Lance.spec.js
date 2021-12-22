@@ -84,4 +84,23 @@ describe('Um lance com valor minimo', () => {
 
         expect(valorDoLance).toBe(400) //Esperamos que o valor emitido no lance seja o mesmo que o valor inserido no input
     })
+    //Testando valores invalidos, se a mensagem de erro irá aparecer
+    //Criando testes assincronos
+    test('não são aceitos lances com valores menores do que o minimo informado', async () => {
+        const wrapper = mount(Lance, {
+            propsData: 300
+        })
+
+        const input = wrapper.find('input')
+        input.setValue(100)
+
+        wrapper.trigger('submit')
+
+        //Aguardando pelo nextTick, ou seja, aguardando que o DOM seja atualizado, para prosseguir
+        await wrapper.vm.$nextTick()
+
+        const msgErro = wrapper.find('p.alert') //Pegando o elemento p que possui a class alert de dentro do componente
+
+        expect(msgErro).toBeTruthy() //Esperamos que a mensagem de erro seja montado
+    })
 })
