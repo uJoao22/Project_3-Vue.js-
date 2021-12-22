@@ -1,12 +1,29 @@
 import Lance from '@/components/Lance'
 import { mount } from '@vue/test-utils'
 
-//Encontrando elementos do HTML
+//Testando o cenario de valor invalido, onde o evento não deve ser emitido para valores invalidos, menores que zero
 test('Não aceita lance com valor menor do que zero', () => { //O primeiro parametro é a descrição do que iremos testar, o segundo parametro é a função que irá conter o teste
-    const wrapper = mount(Lance) //Retornando para a variavel o empacotador do mount
+    const wrapper = mount(Lance) //Montando o componente Lance
 
-    const input = wrapper.find('input') //Usando o método find para buscar elemento do HTML, como o input
-    input.setValue(-100)
+    const input = wrapper.find('input') //Capturando o input dentro do componente Lance
+    input.setValue(-100) //Defininfo um valor invalido para o input
 
-    expect(input).toBeTruthy() //Esperamos que wrapper seja verdadeiro, tenha sido montado com sucesso
+    const lancesEmitidos = wrapper.emitted('novo-lance') //Ouvindo todos as emissões de evento, do evento 'novo-lance'
+    wrapper.trigger('submit') //Usando o trigger para ativar o evento de submit do formulario
+
+    expect(lancesEmitidos).toBeUndefined() //Esperando que lancesEmitidos retornem undefined
+})
+
+//Testando o cenario de sucesso, onde o evento deve ser chamado, pois existe um valor maior do que zero
+test('Emite um lance quando o valor é maior do que zero', () => {
+    const wrapper = mount(Lance)
+
+    const input = wrapper.find('input')
+    input.setValue(100) //Defininfo um valor valido para o input
+
+    wrapper.trigger('submit')
+
+    const lancesEmitidos = wrapper.emitted('novo-lance')
+
+    expect(lancesEmitidos).toHaveLength(1) //Esperando que lancesEmitidos retornem um tamanho 1, que exista elementos dentro dele
 })
